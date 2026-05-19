@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>京通行</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="app-body">
+  <div id="appError" class="app-error" style="display:none;"></div>
+  <header class="app-topbar">
+    <a class="app-brand" href="index.html" aria-label="京通行首页">
+      <span class="app-logo">京</span>
+      <span>
+        <strong>京通行</strong>
+        <small>面向首都都市圈的智慧通勤 MaaS 服务平台</small>
+      </span>
+    </a>
+    <nav class="desktop-app-tabs" aria-label="桌面端导航">
+      <button class="app-tab-link active" type="button" data-tab="home" data-tab-target="home">首页</button>
+      <button class="app-tab-link" type="button" data-tab="commute" data-tab-target="commute">通勤</button>
+      <button class="app-tab-link" type="button" data-tab="green" data-tab-target="green">绿色</button>
+      <button class="app-tab-link" type="button" data-tab="messages" data-tab-target="messages">消息</button>
+      <button class="app-tab-link" type="button" data-tab="profile" data-tab-target="profile">我的</button>
+    </nav>
+    <div class="app-top-actions">
+      <span id="currentUserLabel">游客模式</span>
+      <button class="text-button" id="openAuthModalBtn" type="button">登录</button>
+      <button class="text-button hidden" id="logoutBtn" type="button">退出</button>
+      <a class="text-button" href="admin.html">后台</a>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <section class="app-panel active" id="tab-home" data-page="home" data-tab-panel="home">
+      <div class="home-hero-card">
+        <div>
+          <p class="muted" id="todayDate">今天</p>
+          <h1>早上好，<span id="homeUserName">张成学</span></h1>
+          <p>今天的通勤状态已为你更新</p>
+        </div>
+        <button class="small-pill" id="enterDemoModeBtn" type="button" data-action="load-demo">演示模式</button>
+      </div>
+
+      <article class="today-commute-card" id="todayCommuteCard">
+        <div class="card-header-row">
+          <span class="section-kicker">今日通勤</span>
+          <span class="risk-chip low" id="todayRiskTag">低风险</span>
+        </div>
+        <h2 id="todayRouteName">霍营 → 北京联合大学</h2>
+        <div class="today-metrics">
+          <div>
+            <span>建议出发</span>
+            <strong id="todayDepartTime">07:05</strong>
+          </div>
+          <div>
+            <span>预计到达</span>
+            <strong id="todayArrivalTime">07:51</strong>
+          </div>
+          <div>
+            <span>稳定性</span>
+            <strong id="todayStabilityScore">90 分</strong>
+          </div>
+        </div>
+        <div class="stable-progress"><span id="todayStabilityBar"></span></div>
+        <div class="route-tag-row">
+          <span class="route-badge stable" id="todayRouteBadge">最稳方案</span>
+          <span class="route-badge green">校园接驳</span>
+        </div>
+        <button class="app-primary-btn" type="button" data-go-tab="commute" id="viewTodayPlanBtn">查看通勤方案</button>
+        <p class="demo-message" id="homeDemoModeMessage"></p>
+      </article>
+
+      <section class="quick-entry-grid" aria-label="快捷功能入口">
+        <button type="button" data-go-tab="commute" data-focus="planner"><span>🧭</span>路线规划</button>
+        <button type="button" data-go-tab="commute" data-focus="fixed"><span>📌</span>固定通勤</button>
+        <button type="button" data-go-tab="green"><span>🌱</span>绿色积分</button>
+        <button type="button" data-go-tab="green" data-focus="report"><span>📊</span>通勤月报</button>
+        <button type="button" data-go-tab="commute" data-focus="last-mile"><span>🚲</span>接驳推荐</button>
+      </section>
+
+      <section class="app-card">
+        <div class="card-header-row">
+          <h2>今日提醒</h2>
+          <span class="mini-count" id="unreadCount">0 条未读</span>
+        </div>
+        <div class="reminder-list" id="homeReminderList"></div>
+      </section>
+
+      <section class="difference-card">
+        <h2>为什么选择京通行？</h2>
+        <p>高德解决单次出行怎么走，京通行关注每天通勤怎么更稳、更准时、更低碳。</p>
+        <a href="about.html">查看产品定位</a>
+      </section>
+    </section>
+
+    <section class="app-panel" id="tab-commute" data-page="commute" data-tab-panel="commute">
+      <div class="app-page-head">
+        <div>
+          <span class="section-kicker">Commute</span>
+          <h1>通勤</h1>
+          <p>管理固定路线，并按稳定、时间、换乘、绿色和成本生成推荐方案。</p>
+        </div>
+      </div>
+
+      <section class="app-card" id="fixedSection">
+        <div class="card-header-row">
+          <h2>我的固定通勤</h2>
+          <span class="muted">本地保存</span>
+        </div>
+        <div class="fixed-route-list app-list" id="fixedCommuteList"></div>
+        <form class="compact-form" id="fixedCommuteForm">
+          <input id="fixedRouteNameInput" type="text" placeholder="路线名称，例如 宿舍到学校" required>
+          <div class="form-grid-2">
+            <select id="fixedStartInput" required><option value="">起点</option></select>
+            <select id="fixedEndInput" required><option value="">终点</option></select>
+          </div>
+          <div class="form-grid-2">
+            <input id="fixedDepartTimeInput" type="time" value="07:05" aria-label="常用出发时间">
+            <input id="fixedTargetArrivalInput" type="time" value="08:00" aria-label="目标到达时间">
+          </div>
+          <div class="form-grid-2">
+            <select id="fixedUserTypeSelect">
+              <option value="学生">学生</option>
+              <option value="上班族">上班族</option>
+              <option value="园区员工">园区员工</option>
+            </select>
+            <select id="fixedPreferenceSelect">
+              <option value="stable">最稳</option>
+              <option value="time">最快</option>
+              <option value="green">绿色</option>
+              <option value="cost">低成本</option>
+            </select>
+          </div>
+          <button class="app-secondary-btn" type="submit">新增固定通勤</button>
+          <p class="form-message" id="fixedCommuteMessage"></p>
+          <p class="local-tip" id="fixedCommuteTip">未登录也可本地创建；登录后可模拟多设备同步。</p>
+        </form>
+      </section>
+
+      <section class="app-card" id="plannerSection">
+        <h2>路线规划</h2>
+        <form class="planner-form compact-form" id="plannerForm">
+          <div class="form-grid-2">
+            <select id="startInput" required><option value="">起点</option></select>
+            <select id="endInput" required><option value="">终点</option></select>
+          </div>
+          <div class="form-grid-2">
+            <input id="targetArrivalInput" type="time" value="08:00" aria-label="目标到达时间">
+            <select id="strategySelect">
+              <option value="stable">稳定优先</option>
+              <option value="time">时间优先</option>
+              <option value="transfer">换乘少</option>
+              <option value="green">绿色优先</option>
+              <option value="cost">低成本优先</option>
+            </select>
+          </div>
+          <button class="app-primary-btn" type="submit">开始规划</button>
+        </form>
+      </section>
+
+      <section class="route-results" id="routeResults">
+        <article class="empty-state">
+          <strong>选择起点、终点和偏好后开始规划</strong>
+          <span>推荐路线会展示稳定性评分、迟到风险、碳减排和最后一公里接驳。</span>
+        </article>
+      </section>
+
+      <section class="app-card" id="lastMileSection">
+        <div class="card-header-row">
+          <h2>校园/园区接驳推荐</h2>
+          <span class="muted">最后一公里</span>
+        </div>
+        <div class="last-mile-grid app-list" id="lastMileRecommendations"></div>
+      </section>
+    </section>
+
+    <section class="app-panel" id="tab-green" data-page="green" data-tab-panel="green">
+      <div class="app-page-head">
+        <div>
+          <span class="section-kicker">Green Account</span>
+          <h1>绿色</h1>
+          <p>像积分中心一样管理你的低碳通勤账户。</p>
+        </div>
+      </div>
+
+      <section class="green-account-card">
+        <div class="card-header-row">
+          <span>当前等级</span>
+          <strong id="greenLevel">青铜通勤者</strong>
+        </div>
+        <div class="green-score" id="greenPointTotal">0 分</div>
+        <div class="stable-progress"><span id="greenProgressBar"></span></div>
+        <p id="greenProgressText">距离“白银通勤者”还差 200 分</p>
+        <div class="today-metrics">
+          <div><span>绿色次数</span><strong id="greenTripCount">0 次</strong></div>
+          <div><span>累计减排</span><strong id="carbonTotal">0.00 kg</strong></div>
+          <div><span>相当种树</span><strong id="treeEquivalent">0.0 棵</strong></div>
+        </div>
+      </section>
+
+      <section class="app-card">
+        <h2>积分规则</h2>
+        <div class="rule-chip-grid">
+          <span>步行/骑行每公里 5 分</span>
+          <span>地铁每公里 3 分</span>
+          <span>公交每公里 2 分</span>
+          <span>减少 1kg CO₂ 奖励 10 分</span>
+        </div>
+      </section>
+
+      <section class="app-card">
+        <h2>积分可兑换</h2>
+        <div class="reward-grid" id="greenRewardList"></div>
+      </section>
+
+      <section class="app-card">
+        <h2>绿色排行榜</h2>
+        <div class="ranking-list" id="greenRankingList"></div>
+      </section>
+
+      <section class="app-card" id="monthlyReportSection">
+        <div class="card-header-row">
+          <h2>通勤月报</h2>
+          <button class="mini-action" id="generateMonthlyReportBtn" type="button" data-action="generate-report">生成</button>
+        </div>
+        <div class="monthly-report-card" id="monthlyReportCard">
+          <article class="empty-state">
+            <strong>点击生成本月通勤月报</strong>
+            <span>系统会基于历史查询、收藏和绿色积分生成 App 风格总结。</span>
+          </article>
+        </div>
+      </section>
+    </section>
+
+    <section class="app-panel" id="tab-messages" data-page="messages" data-tab-panel="messages">
+      <div class="app-page-head">
+        <div>
+          <span class="section-kicker">Messages</span>
+          <h1>消息</h1>
+          <p>迟到风险、线路拥挤、接驳短板和积分到账都集中在这里。</p>
+        </div>
+        <button class="mini-action" id="markAllReadBtn" type="button" data-action="mark-all-read">全部已读</button>
+      </div>
+      <div class="message-list" id="messageList"></div>
+    </section>
+
+    <section class="app-panel" id="tab-profile" data-page="profile" data-tab-panel="profile">
+      <div class="profile-card">
+        <div class="avatar">张</div>
+        <div>
+          <h1 id="profileUserName">张成学</h1>
+          <p id="profileUserType">北京联合大学学生</p>
+          <span id="profileGreenLevel">青铜通勤者 · 0 分</span>
+        </div>
+      </div>
+
+      <section class="app-card">
+        <div class="card-header-row">
+          <h2>常用地址</h2>
+          <button class="mini-action" type="button" id="saveAddressBtn" data-action="save-address">保存模拟</button>
+        </div>
+        <div class="address-grid">
+          <label>家<input id="homeAddressInput" value="霍营"></label>
+          <label>学校<input id="schoolAddressInput" value="北京联合大学"></label>
+          <label>实习单位<input id="internAddressInput" value="国贸"></label>
+          <label>地铁站<input id="metroAddressInput" value="霍营站"></label>
+        </div>
+        <p class="form-message" id="addressMessage"></p>
+      </section>
+
+      <section class="app-card">
+        <h2>我的收藏</h2>
+        <div class="record-list" id="favoriteList"></div>
+      </section>
+
+      <section class="app-card">
+        <div class="card-header-row">
+          <h2>我的历史</h2>
+          <button class="mini-action" id="clearHistoryBtn" type="button" data-action="clear-history">清空</button>
+        </div>
+        <div class="record-list" id="historyList"></div>
+      </section>
+
+      <section class="app-card">
+        <h2>我的固定通勤</h2>
+        <div class="record-list" id="profileFixedCommuteList"></div>
+      </section>
+
+      <section class="app-card privacy-entry">
+        <h2>隐私与数据授权</h2>
+        <p>本课程原型不采集真实定位数据，所有数据仅保存在本地。</p>
+        <div class="button-row">
+          <a class="app-secondary-btn" href="data-policy.html">数据合规说明</a>
+          <a class="app-secondary-btn" href="operation.html">运营策略</a>
+          <a class="app-secondary-btn" href="about.html">关于京通行</a>
+        </div>
+      </section>
+
+      <section class="app-card">
+        <h2>演示模式</h2>
+        <p class="muted">一键生成张成学的早八通勤、绿色积分、月报、消息和后台 OD 数据。</p>
+        <div class="button-row">
+          <button class="app-primary-btn" id="profileLoadDemoBtn" type="button" data-action="load-demo">加载演示数据</button>
+          <button class="app-danger-btn" id="clearDemoDataBtn" type="button" data-action="clear-demo">清除演示数据</button>
+        </div>
+        <p class="demo-message" id="demoModeMessage"></p>
+      </section>
+    </section>
+  </main>
+
+  <nav class="bottom-tabbar" aria-label="移动端底部 Tab">
+    <button class="app-tab-link active" type="button" data-tab="home" data-tab-target="home"><span>🏠</span>首页</button>
+    <button class="app-tab-link" type="button" data-tab="commute" data-tab-target="commute"><span>🚇</span>通勤</button>
+    <button class="app-tab-link" type="button" data-tab="green" data-tab-target="green"><span>🌱</span>绿色</button>
+    <button class="app-tab-link" type="button" data-tab="messages" data-tab-target="messages"><span>🔔</span>消息</button>
+    <button class="app-tab-link" type="button" data-tab="profile" data-tab-target="profile"><span>👤</span>我的</button>
+  </nav>
+
+  <div class="modal-overlay hidden" id="authModal" aria-hidden="true">
+    <section class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+      <button class="modal-close" id="closeAuthModalBtn" type="button" aria-label="关闭登录注册弹窗">×</button>
+      <span class="section-kicker">Login</span>
+      <h2 id="authModalTitle">登录 / 注册</h2>
+      <label>用户名<input id="usernameInput" type="text" placeholder="student 或 张成学"></label>
+      <label>密码<input id="passwordInput" type="password" placeholder="123456"></label>
+      <div class="button-row">
+        <button class="app-primary-btn" id="loginBtn" type="button">登录</button>
+        <button class="app-secondary-btn" id="registerBtn" type="button">注册</button>
+      </div>
+      <p class="hint" id="authMessage">课程原型演示账号：student / 123456。</p>
+    </section>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/routePlanner.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

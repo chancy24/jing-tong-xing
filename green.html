@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>绿色出行 - 京通行</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="green">
+  <header class="site-header">
+    <nav class="nav-shell">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">京</span>
+        <span><strong>京通行</strong><small>首都都市圈 MaaS</small></span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html">首页</a>
+        <a href="plan.html">路线规划</a>
+        <a href="traffic.html">实时交通</a>
+        <a class="active" href="green.html">绿色出行</a>
+        <a href="history.html">收藏历史</a>
+        <a href="admin.html">管理员端</a>
+      </div>
+      <div class="nav-actions" id="navUser"></div>
+    </nav>
+  </header>
+
+  <main class="page-main">
+    <section class="section-heading">
+      <p class="eyebrow">Low Carbon</p>
+      <h1>绿色出行碳减排统计</h1>
+      <p class="muted">以私家车排放为基准，估算公交、地铁、骑行和步行带来的减排量与绿色积分。</p>
+    </section>
+
+    <section class="stat-grid">
+      <article class="stat-card">
+        <span>累计减排</span>
+        <strong id="totalCarbon">0.00 kg</strong>
+      </article>
+      <article class="stat-card">
+        <span>绿色积分</span>
+        <strong id="greenScore">0</strong>
+      </article>
+      <article class="stat-card">
+        <span>低碳等级</span>
+        <strong id="greenLevel">绿色通勤新手</strong>
+      </article>
+      <article class="stat-card">
+        <span>历史路线</span>
+        <strong id="greenTripCount">0 次</strong>
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>最近绿色记录</h2>
+      <div class="record-list" id="greenRecords"></div>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/carbon.js"></script>
+  <script src="js/green.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

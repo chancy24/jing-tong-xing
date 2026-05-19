@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>京通行数据来源与隐私合规说明</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header admin-header">
+    <a class="brand" href="index.html" aria-label="京通行">
+      <span class="brand-mark">京</span>
+      <span>
+        <strong>京通行</strong>
+        <small>数据来源与隐私合规说明</small>
+      </span>
+    </a>
+    <nav class="nav" aria-label="数据合规页导航">
+      <a href="index.html">返回首页</a>
+      <a href="admin.html">后台管理</a>
+      <a href="operation.html">运营策略</a>
+      <a href="about.html">关于产品</a>
+      <a href="#prototypeData">原型数据</a>
+      <a href="#productData">真实接入</a>
+      <a href="#privacy">隐私保护</a>
+      <a href="#principles">使用原则</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="admin-hero policy-hero">
+      <div>
+        <p class="eyebrow">Data Policy</p>
+        <h1>数据来源与隐私合规说明</h1>
+        <p class="hero-text">
+          京通行课程原型以本地模拟数据展示首都都市圈智慧通勤 MaaS 能力，不采集真实定位数据，不上传个人数据。
+          本页说明原型阶段的数据边界，以及真实产品阶段可扩展的数据接入和隐私保护设计。
+        </p>
+        <div class="policy-badges" aria-label="数据合规关键词">
+          <span class="tag">本地存储</span>
+          <span class="tag">模拟数据</span>
+          <span class="tag">匿名聚合</span>
+          <span class="tag">用户授权</span>
+        </div>
+      </div>
+
+      <article class="login-card policy-summary-card">
+        <h2>原型阶段边界</h2>
+        <p>当前系统仅用于课程答辩演示，所有线路、拥挤度、准点率、碳排放、迟到风险均为前端模拟。</p>
+        <div class="policy-meter">
+          <span>真实个人数据采集</span>
+          <strong>0%</strong>
+        </div>
+        <div class="policy-meter-bar" aria-hidden="true"><span></span></div>
+      </article>
+    </section>
+
+    <section class="section" id="prototypeData">
+      <div class="section-head">
+        <div class="section-title">
+          <p class="eyebrow">Prototype Data</p>
+          <h2>一、课程原型阶段数据来源</h2>
+        </div>
+        <p>用于支撑路线规划、通勤稳定性、绿色积分和后台 OD 分析演示。</p>
+      </div>
+      <div class="policy-grid">
+        <article class="policy-card">
+          <span class="policy-icon">01</span>
+          <h3>JSON 模拟线路数据</h3>
+          <p>通过 <code>js/data.js</code> 维护地点、路线、交通状态、通勤走廊和后台统计数据。</p>
+        </article>
+        <article class="policy-card">
+          <span class="policy-icon">02</span>
+          <h3>localStorage 本地用户数据</h3>
+          <p>用户注册、登录状态、收藏路线、查询历史、固定通勤和绿色账户保存在本机浏览器。</p>
+        </article>
+        <article class="policy-card">
+          <span class="policy-icon">03</span>
+          <h3>模拟运行指标</h3>
+          <p>拥挤度、准点率、碳排放、绿色积分和迟到风险均由 JavaScript 模拟算法计算。</p>
+        </article>
+        <article class="policy-card highlight-card">
+          <span class="policy-icon">04</span>
+          <h3>不采集真实定位数据</h3>
+          <p>原型不调用地图定位、不读取 GPS、不上传个人轨迹，不接入真实后端服务。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="productData">
+      <div class="section-head">
+        <div class="section-title">
+          <p class="eyebrow">Product Data</p>
+          <h2>二、真实产品阶段可接入数据</h2>
+        </div>
+        <p>真实落地时需以授权、脱敏、聚合为前提，分层接入交通和组织通勤数据。</p>
+      </div>
+      <div class="policy-source-list">
+        <div>政府交通开放数据</div>
+        <div>公交、地铁运营企业接口</div>
+        <div>第三方地图 API</div>
+        <div>共享单车企业接口</div>
+        <div>用户授权通勤记录</div>
+        <div>高校、园区、企业班车数据</div>
+        <div>碳普惠方法学和低碳积分规则</div>
+      </div>
+    </section>
+
+    <section class="section" id="privacy">
+      <div class="section-head">
+        <div class="section-title">
+          <p class="eyebrow">Privacy</p>
+          <h2>三、隐私保护设计</h2>
+        </div>
+        <p>面向用户端、管理端和政府治理端建立分级可见的数据边界。</p>
+      </div>
+      <div class="two-column">
+        <article class="panel">
+          <h3>用户侧保护</h3>
+          <ul class="policy-check-list">
+            <li>用户主动授权后才记录通勤信息。</li>
+            <li>家和公司位置进行模糊化处理，只保留通勤区域或站点级信息。</li>
+            <li>支持删除历史记录和撤回授权。</li>
+            <li>本地原型不上传个人数据。</li>
+          </ul>
+        </article>
+        <article class="panel">
+          <h3>管理侧保护</h3>
+          <ul class="policy-check-list">
+            <li>只展示匿名化、聚合化 OD 数据。</li>
+            <li>管理端不查看个人完整轨迹。</li>
+            <li>高校、园区、企业、政府端按角色展示不同数据范围。</li>
+            <li>通过分级权限管理降低越权访问风险。</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="principles">
+      <div class="section-head">
+        <div class="section-title">
+          <p class="eyebrow">Principles</p>
+          <h2>四、数据使用原则</h2>
+        </div>
+        <p>以课程原型为基础，保留真实产品可解释、可审计、可撤回的数据治理思路。</p>
+      </div>
+      <div class="principle-grid">
+        <article class="principle-card">
+          <strong>最小必要</strong>
+          <span>只收集完成通勤服务所需的数据。</span>
+        </article>
+        <article class="principle-card">
+          <strong>明示授权</strong>
+          <span>采集、分析、共享前向用户明确说明用途。</span>
+        </article>
+        <article class="principle-card">
+          <strong>匿名统计</strong>
+          <span>后台治理分析使用聚合 OD 和走廊指标。</span>
+        </article>
+        <article class="principle-card">
+          <strong>安全存储</strong>
+          <span>原型保存在本地，真实产品需采用加密和访问控制。</span>
+        </article>
+        <article class="principle-card">
+          <strong>可撤回可删除</strong>
+          <span>用户可删除历史记录，并撤回个性化分析授权。</span>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>本页面用于课程设计答辩说明，强调京通行原型的数据边界、隐私保护和真实产品阶段的数据治理思路。</p>
+  </footer>
+</body>
+</html>

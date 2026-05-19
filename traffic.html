@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>实时交通 - 京通行</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="traffic">
+  <header class="site-header">
+    <nav class="nav-shell">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">京</span>
+        <span><strong>京通行</strong><small>首都都市圈 MaaS</small></span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html">首页</a>
+        <a href="plan.html">路线规划</a>
+        <a class="active" href="traffic.html">实时交通</a>
+        <a href="green.html">绿色出行</a>
+        <a href="history.html">收藏历史</a>
+        <a href="admin.html">管理员端</a>
+      </div>
+      <div class="nav-actions" id="navUser"></div>
+    </nav>
+  </header>
+
+  <main class="page-main">
+    <section class="section-heading">
+      <p class="eyebrow">Traffic Simulation</p>
+      <h1>实时交通信息模拟</h1>
+      <p class="muted">展示线路运营状态、拥挤程度、预计到站时间和运营时间，作为真实 API 接入前的课程原型数据。</p>
+    </section>
+
+    <section class="table-panel">
+      <table>
+        <thead>
+          <tr>
+            <th>线路</th>
+            <th>方式</th>
+            <th>运营状态</th>
+            <th>拥挤度</th>
+            <th>下一班</th>
+            <th>运营时间</th>
+          </tr>
+        </thead>
+        <tbody id="trafficTable"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/traffic.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

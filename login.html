@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录注册 - 京通行</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="login">
+  <header class="site-header">
+    <nav class="nav-shell">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">京</span>
+        <span><strong>京通行</strong><small>首都都市圈 MaaS</small></span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html">首页</a>
+        <a href="plan.html">路线规划</a>
+        <a href="traffic.html">实时交通</a>
+        <a href="green.html">绿色出行</a>
+        <a href="history.html">收藏历史</a>
+        <a href="admin.html">管理员端</a>
+      </div>
+      <div class="nav-actions" id="navUser"></div>
+    </nav>
+  </header>
+
+  <main class="page-main narrow">
+    <section class="section-heading center">
+      <p class="eyebrow">User Access</p>
+      <h1>用户登录与注册</h1>
+      <p class="muted">localStorage 模拟账号数据。管理员演示账号：admin / admin123。</p>
+    </section>
+
+    <section class="auth-grid">
+      <form class="panel" id="loginForm">
+        <h2>登录</h2>
+        <label>
+          用户名
+          <input type="text" id="loginUsername" placeholder="请输入用户名">
+        </label>
+        <label>
+          密码
+          <input type="password" id="loginPassword" placeholder="请输入密码">
+        </label>
+        <button class="btn primary full" type="submit">登录系统</button>
+        <p class="form-message" id="loginMessage"></p>
+      </form>
+
+      <form class="panel" id="registerForm">
+        <h2>注册</h2>
+        <label>
+          用户名
+          <input type="text" id="registerUsername" placeholder="例如 commute_user">
+        </label>
+        <label>
+          密码
+          <input type="password" id="registerPassword" placeholder="至少 4 位">
+        </label>
+        <label>
+          手机号
+          <input type="text" id="registerPhone" placeholder="课程原型可选">
+        </label>
+        <label>
+          常用地址
+          <input type="text" id="registerAddress" placeholder="例如 北京联合大学">
+        </label>
+        <button class="btn ghost full" type="submit">创建账号</button>
+        <p class="form-message" id="registerMessage"></p>
+      </form>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/login.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

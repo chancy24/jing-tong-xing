@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>收藏历史 - 京通行</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="history">
+  <header class="site-header">
+    <nav class="nav-shell">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">京</span>
+        <span><strong>京通行</strong><small>首都都市圈 MaaS</small></span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html">首页</a>
+        <a href="plan.html">路线规划</a>
+        <a href="traffic.html">实时交通</a>
+        <a href="green.html">绿色出行</a>
+        <a class="active" href="history.html">收藏历史</a>
+        <a href="admin.html">管理员端</a>
+      </div>
+      <div class="nav-actions" id="navUser"></div>
+    </nav>
+  </header>
+
+  <main class="page-main">
+    <section class="section-heading">
+      <p class="eyebrow">Personal Records</p>
+      <h1>收藏路线与历史记录</h1>
+      <p class="muted">登录用户可保存常用路线和查询历史；游客模式仅展示临时结果。</p>
+    </section>
+
+    <section class="two-column">
+      <div class="panel">
+        <h2>我的收藏</h2>
+        <div class="record-list" id="favoriteList"></div>
+      </div>
+      <div class="panel">
+        <h2>查询历史</h2>
+        <div class="record-list" id="historyList"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/history.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

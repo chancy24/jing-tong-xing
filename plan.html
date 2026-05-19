@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>路线规划 - 京通行</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="plan">
+  <header class="site-header">
+    <nav class="nav-shell">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">京</span>
+        <span><strong>京通行</strong><small>首都都市圈 MaaS</small></span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html">首页</a>
+        <a class="active" href="plan.html">路线规划</a>
+        <a href="traffic.html">实时交通</a>
+        <a href="green.html">绿色出行</a>
+        <a href="history.html">收藏历史</a>
+        <a href="admin.html">管理员端</a>
+      </div>
+      <div class="nav-actions" id="navUser"></div>
+    </nav>
+  </header>
+
+  <main class="page-main">
+    <section class="section-heading">
+      <p class="eyebrow">Route Planning</p>
+      <h1>通勤路线规划</h1>
+      <p class="muted">根据时间、换乘、费用、碳排放和拥挤度进行加权评分，输出 2-3 条课程模拟路线。</p>
+    </section>
+
+    <section class="planner-layout">
+      <form class="panel planner-form" id="plannerForm">
+        <label>
+          起点
+          <input type="text" id="startInput" placeholder="例如 学校">
+        </label>
+        <label>
+          终点
+          <input type="text" id="endInput" placeholder="例如 北京西站">
+        </label>
+        <label>
+          出发时间
+          <input type="time" id="departTime" value="08:00">
+        </label>
+        <label>
+          偏好策略
+          <select id="strategySelect">
+            <option value="time">时间优先</option>
+            <option value="transfer">少换乘</option>
+            <option value="green">绿色优先</option>
+            <option value="cost">费用优先</option>
+          </select>
+        </label>
+        <button class="btn primary full" type="submit">生成推荐路线</button>
+        <p class="form-message" id="plannerMessage"></p>
+      </form>
+
+      <div class="panel">
+        <h2>评分模型</h2>
+        <p class="muted small">
+          Score = w1 x 时间 + w2 x 换乘 + w3 x 费用 + w4 x 碳排 + w5 x 拥挤度。
+          得分越低，路线越符合当前偏好策略。
+        </p>
+        <div class="weight-list" id="weightList"></div>
+      </div>
+    </section>
+
+    <section class="results-section">
+      <div class="section-heading compact">
+        <h2>推荐结果</h2>
+        <p class="muted">当前为模拟候选方案，适合课程演示算法思路。</p>
+      </div>
+      <div class="route-results" id="routeResults"></div>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/carbon.js"></script>
+  <script src="js/routeAlgorithm.js"></script>
+  <script src="js/plan.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>京通行后台管理</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header admin-header">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">京</span>
+      <span>
+        <strong>京通行后台管理</strong>
+        <small>面向首都都市圈的智慧通勤 MaaS 服务平台</small>
+      </span>
+    </a>
+    <nav class="nav" aria-label="后台导航">
+      <a href="#overview">数据概览</a>
+      <a href="#roleDashboards">三类管理端</a>
+      <a href="#odAnalysis">OD 分析</a>
+      <a href="#users">用户管理</a>
+      <a href="#routes">线路数据管理</a>
+      <a href="#popular">热门路线统计</a>
+      <a href="#lastMileAdmin">接驳短板</a>
+      <a href="#greenStatsSection">绿色出行统计</a>
+      <a href="operation.html">运营策略</a>
+      <a href="data-policy.html">数据合规</a>
+      <a href="about.html">关于产品</a>
+      <a href="index.html">返回用户端</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="admin-hero">
+      <div>
+        <p class="eyebrow">Admin Dashboard</p>
+        <h1>京通行后台管理</h1>
+        <p class="hero-text">
+          面向首都都市圈高频通勤场景，展示用户、本地路线数据维护、热门路线统计和绿色出行统计。
+        </p>
+      </div>
+
+      <article class="login-card" id="adminLoginCard">
+        <h2>管理员登录</h2>
+        <label>
+          用户名
+          <input id="adminUsername" type="text" value="admin">
+        </label>
+        <label>
+          密码
+          <input id="adminPassword" type="password" value="admin123">
+        </label>
+        <button class="btn primary" id="adminLoginBtn" type="button">进入后台</button>
+        <p class="hint" id="adminMessage">默认管理员：admin / admin123</p>
+      </article>
+    </section>
+
+    <section class="admin-dashboard hidden" id="adminDashboard">
+      <section class="section" id="overview">
+        <div class="section-head">
+          <div class="section-title">
+            <p class="eyebrow">Overview</p>
+            <h2>数据概览</h2>
+          </div>
+          <div class="section-actions">
+            <button class="btn primary" id="loadDemoDataBtn" type="button">加载演示数据</button>
+            <button class="btn ghost" id="clearDemoAdminDataBtn" type="button">清除演示数据</button>
+            <button class="btn secondary" id="refreshAdminBtn" type="button">刷新统计</button>
+          </div>
+        </div>
+        <p class="prototype-tip hidden" id="adminDemoMessage"></p>
+        <div class="dashboard-row">
+          <article class="metric-card">
+            <span>注册用户数</span>
+            <strong id="adminUserCount">0</strong>
+          </article>
+          <article class="metric-card">
+            <span>收藏路线数</span>
+            <strong id="adminFavoriteCount">0</strong>
+          </article>
+          <article class="metric-card">
+            <span>历史查询次数</span>
+            <strong id="adminHistoryCount">0</strong>
+          </article>
+          <article class="metric-card">
+            <span>累计碳减排量</span>
+            <strong id="adminCarbonTotal">0.00 kg</strong>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="roleDashboards">
+        <div class="section-head">
+          <div class="section-title">
+            <p class="eyebrow">Role Dashboards</p>
+            <h2>三类管理端</h2>
+          </div>
+          <p>用模拟数据展示高校/园区、企业、政府三类角色的通勤管理和治理决策辅助能力。</p>
+        </div>
+
+        <div class="admin-tabs" id="adminManagementTabs" role="tablist" aria-label="三类管理端切换">
+          <button class="admin-tab active" type="button" data-admin-tab="campus">高校/园区管理端</button>
+          <button class="admin-tab" type="button" data-admin-tab="enterprise">企业管理端</button>
+          <button class="admin-tab" type="button" data-admin-tab="government">政府治理端</button>
+        </div>
+
+        <div class="admin-tab-panel" id="campusDashboardPanel" data-admin-panel="campus">
+          <div class="management-grid">
+            <article class="panel">
+              <div class="section-title">
+                <p class="eyebrow">Source</p>
+                <h3>学生/员工通勤来源区域</h3>
+              </div>
+              <div id="campusSourceStats" class="bar-list"></div>
+            </article>
+            <article class="panel">
+              <div class="section-title">
+                <p class="eyebrow">Shuttle</p>
+                <h3>校园/园区接驳需求</h3>
+              </div>
+              <div id="campusShuttleDemand" class="data-card-list"></div>
+            </article>
+            <article class="panel">
+              <div class="section-title">
+                <p class="eyebrow">Destination</p>
+                <h3>热门到达地</h3>
+              </div>
+              <div id="campusHotDestinations" class="bar-list"></div>
+            </article>
+            <article class="panel">
+              <div class="section-title">
+                <p class="eyebrow">Green</p>
+                <h3>绿色通勤人数</h3>
+              </div>
+              <div id="campusGreenUsers" class="data-card-list"></div>
+            </article>
+            <article class="panel management-wide">
+              <div class="section-title">
+                <p class="eyebrow">Suggestion</p>
+                <h3>建议增设接驳车的站点</h3>
+              </div>
+              <div id="campusShuttleSuggestions" class="table-wrap"></div>
+            </article>
+          </div>
+        </div>
+
+        <div class="admin-tab-panel hidden" id="enterpriseDashboardPanel" data-admin-panel="enterprise">
+          <div class="management-grid">
+            <article class="panel">
+              <div class="section-title">
+                <p class="eyebrow">Corridor</p>
+                <h3>员工通勤走廊统计</h3>
+              </div>
+              <div id="enterpriseCorridorStats" class="bar-list"></div>
+            </article>
+            <article class="panel">
+              <div class="section-title">
+                <p class="eyebrow">Bus</p>
+                <h3>班车线路优化建议</h3>
+              </div>
+              <div id="enterpriseShuttleAdvice" class="data-card-list"></div>
+            </article>
+            <article class="panel">
+              <div class="section-title">
+                <p class="eyebrow">Parking</p>
+                <h3>停车压力分析</h3>
+              </div>
+              <div id="enterpriseParkingPressure" class="data-card-list"></div>
+            </article>
+            <article class="panel">
+              <div class="section-title">
+                <p class="eyebrow">Late Risk</p>
+                <h3>迟到风险高发时间段</h3>
+              </div>
+              <div id="enterpriseLateRiskSlots" class="bar-list"></div>
+            </article>
+            <article class="panel management-wide">
+              <div class="section-title">
+                <p class="eyebrow">Ranking</p>
+                <h3>企业绿色通勤积分排行</h3>
+              </div>
+              <div id="enterpriseGreenRank" class="table-wrap"></div>
+            </article>
+          </div>
+        </div>
+
+        <div class="admin-tab-panel hidden" id="governmentDashboardPanel" data-admin-panel="government">
+          <div class="management-grid">
+            <article class="panel management-wide">
+              <div class="section-title">
+                <p class="eyebrow">OD</p>
+                <h3>首都都市圈热门 OD</h3>
+              </div>
+              <div id="governmentOdTable" class="table-wrap"></div>
+            </article>
+            <article class="panel">
+              <div class="section-title">
+                <p class="eyebrow">Corridor</p>
+                <h3>典型通勤走廊热度</h3>
+              </div>
+              <div id="governmentCorridorBars" class="bar-list"></div>
+            </article>
+            <article class="panel">
+              <div class="section-title">
+                <p class="eyebrow">Last Mile</p>
+                <h3>接驳短板识别</h3>
+              </div>
+              <div id="governmentLastMileShortage" class="data-card-list"></div>
+            </article>
+            <article class="panel">
+              <div class="section-title">
+                <p class="eyebrow">Green</p>
+                <h3>绿色出行总减排</h3>
+              </div>
+              <div id="governmentGreenImpact" class="data-card-list"></div>
+            </article>
+            <article class="panel">
+              <div class="section-title">
+                <p class="eyebrow">Policy</p>
+                <h3>政策评估指标</h3>
+              </div>
+              <div id="governmentPolicyMetrics" class="bar-list"></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="odAnalysis">
+        <div class="section-head">
+          <div class="section-title">
+            <p class="eyebrow">OD Analysis</p>
+            <h2>OD 分析与热门通勤走廊</h2>
+          </div>
+          <p>综合 localStorage 历史查询记录和 data.js 模拟统计数据，识别热门起终点组合与需要治理的通勤走廊。</p>
+        </div>
+        <div class="management-grid">
+          <article class="panel">
+            <div class="section-title">
+              <p class="eyebrow">Top OD</p>
+              <h3>热门 OD Top 5</h3>
+            </div>
+            <div id="odTopFive" class="bar-list"></div>
+          </article>
+          <article class="panel">
+            <div class="section-title">
+              <p class="eyebrow">Corridor Heat</p>
+              <h3>典型走廊热度</h3>
+            </div>
+            <div id="odCorridorChart" class="bar-list"></div>
+          </article>
+          <article class="panel management-wide">
+            <div class="section-title">
+              <p class="eyebrow">Governance</p>
+              <h3>热门通勤走廊治理分析</h3>
+            </div>
+            <div id="odCorridorTable" class="table-wrap"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="users">
+        <div class="section-head">
+          <div class="section-title">
+            <p class="eyebrow">Users</p>
+            <h2>用户管理</h2>
+          </div>
+          <p>展示浏览器 localStorage 中的注册用户，仅用于课程原型演示。</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>用户ID</th>
+                <th>用户名</th>
+                <th>角色</th>
+                <th>注册时间</th>
+              </tr>
+            </thead>
+            <tbody id="userTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section" id="routes">
+        <div class="section-head">
+          <div class="section-title">
+            <p class="eyebrow">Routes</p>
+            <h2>线路数据管理</h2>
+          </div>
+          <p>新增、编辑、删除结果仅保存到 localStorage，不写回 `data.js`。</p>
+        </div>
+
+        <form class="admin-route-form" id="routeForm">
+          <input type="hidden" id="routeIdInput">
+          <label>
+            路线名称
+            <input id="routeNameInput" type="text" placeholder="例如 霍营至国贸早高峰通勤线" required>
+          </label>
+          <label>
+            起点
+            <input id="routeStartInput" type="text" placeholder="例如 霍营" required>
+          </label>
+          <label>
+            终点
+            <input id="routeEndInput" type="text" placeholder="例如 国贸" required>
+          </label>
+          <label>
+            交通方式组合
+            <input id="routeModesInput" type="text" placeholder="地铁,公交,步行" required>
+          </label>
+          <label>
+            总用时/分钟
+            <input id="routeDurationInput" type="number" min="1" value="45" required>
+          </label>
+          <label>
+            换乘次数
+            <input id="routeTransfersInput" type="number" min="0" value="1" required>
+          </label>
+          <label>
+            费用/元
+            <input id="routeCostInput" type="number" min="0" step="0.5" value="6" required>
+          </label>
+          <label>
+            碳排放/kg
+            <input id="routeCarbonInput" type="number" min="0" step="0.01" value="0.80" required>
+          </label>
+          <label>
+            实时状态
+            <select id="routeStatusInput">
+              <option value="畅通">畅通</option>
+              <option value="拥挤">拥挤</option>
+              <option value="延误">延误</option>
+              <option value="停运">停运</option>
+            </select>
+          </label>
+          <div class="admin-form-actions">
+            <button class="btn primary" id="saveRouteBtn" type="submit">保存路线</button>
+            <button class="btn ghost" id="resetRouteFormBtn" type="button">清空表单</button>
+            <button class="btn secondary" id="resetRoutesBtn" type="button">恢复初始路线</button>
+          </div>
+        </form>
+
+        <div class="table-wrap admin-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>路线名称</th>
+                <th>起点</th>
+                <th>终点</th>
+                <th>方式</th>
+                <th>用时</th>
+                <th>换乘</th>
+                <th>费用</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="routeTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section two-column">
+        <article class="panel" id="popular">
+          <div class="section-title">
+            <p class="eyebrow">Popular</p>
+            <h2>热门路线统计</h2>
+          </div>
+          <div id="popularRoutes" class="record-list"></div>
+        </article>
+
+        <article class="panel" id="greenStatsSection">
+          <div class="section-title">
+            <p class="eyebrow">Green</p>
+            <h2>绿色积分统计</h2>
+          </div>
+          <div id="greenStats" class="record-list"></div>
+        </article>
+
+        <article class="panel" id="lastMileAdmin">
+          <div class="section-title">
+            <p class="eyebrow">Last Mile</p>
+            <h2>接驳短板站点</h2>
+          </div>
+          <div id="lastMileWeaknessList" class="record-list"></div>
+        </article>
+      </section>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>后台页面为课程设计初级原型，不接入真实后端，所有管理数据均保存在浏览器 localStorage。<a href="operation.html">查看用户增长与运营策略</a><a href="data-policy.html">查看数据来源与隐私合规说明</a></p>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/routePlanner.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
