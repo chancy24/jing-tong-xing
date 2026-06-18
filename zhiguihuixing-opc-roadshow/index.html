@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>鏅鸿建鎱ц AI鍖栧崌绾ц矾绾垮睍绀?/title>
+  <style>
+    :root {
+      --bg: #050814;
+      --bg-2: #08112a;
+      --panel: rgba(13, 24, 52, 0.68);
+      --panel-strong: rgba(17, 31, 68, 0.86);
+      --glass: rgba(255, 255, 255, 0.07);
+      --line: rgba(132, 181, 255, 0.24);
+      --line-strong: rgba(117, 220, 255, 0.68);
+      --text: #edf6ff;
+      --muted: #a9b9d9;
+      --subtle: #7182ab;
+      --blue: #3e8bff;
+      --cyan: #57e0ff;
+      --violet: #8c62ff;
+      --pink: #ff5fd2;
+      --green: #58e6a6;
+      --amber: #ffd36a;
+      --danger: #ff718a;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+      --radius: 8px;
+      --nav-h: 68px;
+      --max-w: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(62, 139, 255, 0.25), transparent 30%),
+        radial-gradient(circle at 84% 18%, rgba(140, 98, 255, 0.22), transparent 34%),
+        radial-gradient(circle at 55% 82%, rgba(87, 224, 255, 0.11), transparent 32%),
+        linear-gradient(135deg, #050814 0%, #071026 48%, #09081f 100%);
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    body::before {
+      background-image:
+        linear-gradient(rgba(116, 174, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(116, 174, 255, 0.05) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0.18));
+    }
+
+    body::after {
+      background:
+        linear-gradient(120deg, transparent 0 44%, rgba(87, 224, 255, 0.06) 45%, transparent 47% 100%),
+        linear-gradient(38deg, transparent 0 62%, rgba(140, 98, 255, 0.08) 63%, transparent 65% 100%);
+      z-index: -1;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .top-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav-h);
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 28px;
+      background: rgba(5, 9, 22, 0.72);
+      border-bottom: 1px solid rgba(125, 184, 255, 0.18);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav-inner {
+      width: min(100%, 1380px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 190px;
+      font-weight: 800;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      position: relative;
+      border: 1px solid rgba(87, 224, 255, 0.72);
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(87, 224, 255, 0.18), rgba(140, 98, 255, 0.28)),
+        rgba(255, 255, 255, 0.04);
+      box-shadow: 0 0 24px rgba(87, 224, 255, 0.22);
+    }
+
+    .brand-mark::before,
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      background: var(--cyan);
+      box-shadow: 0 0 12px rgba(87, 224, 255, 0.9);
+    }
+
+    .brand-mark::before {
+      width: 18px;
+      height: 2px;
+      top: 9px;
+      left: 6px;
+      transform: rotate(-20deg);
+    }
+
+    .brand-mark::after {
+      width: 2px;
+      height: 16px;
+      right: 9px;
+      bottom: 6px;
+      transform: rotate(24deg);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .nav-links::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-link {
+      color: var(--muted);
+      font-size: 13px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      white-space: nowrap;
+      transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: var(--text);
+      border-color: rgba(87, 224, 255, 0.3);
+      background: rgba(87, 224, 255, 0.08);
+    }
+
+    .section {
+      position: relative;
+      min-height: 100vh;
+      padding: calc(var(--nav-h) + 46px) 28px 52px;
+      display: flex;
+      align-items: center;
+      scroll-margin-top: var(--nav-h);
+      overflow: hidden;
+    }
+
+    .section::before {
+      content: attr(data-index);
+      position: absolute;
+      right: clamp(22px, 5vw, 82px);
+      top: calc(var(--nav-h) + 14px);
+      color: rgba(255, 255, 255, 0.035);
+      font-size: clamp(80px, 14vw, 188px);
+      font-weight: 900;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .wrap {
+      width: min(100%, var(--max-w));
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-grid {
+      width: min(100%, 1240px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.03fr) minmax(420px, 0.97fr);
+      align-items: center;
+      gap: clamp(30px, 5vw, 68px);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--cyan);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 38px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), transparent);
+      box-shadow: 0 0 14px rgba(87, 224, 255, 0.7);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(46px, 6vw, 86px);
+      line-height: 1.04;
+      letter-spacing: 0;
+      max-width: 900px;
+      text-shadow: 0 0 30px rgba(87, 224, 255, 0.16);
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #ffffff 0%, #70e9ff 46%, #a786ff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      margin-top: 20px;
+      max-width: 740px;
+      color: #d6e4ff;
+      font-size: clamp(20px, 2vw, 29px);
+      line-height: 1.45;
+      font-weight: 500;
+    }
+
+    .position-note {
+      margin-top: 22px;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.8;
+      padding: 14px 16px;
+      border-left: 3px solid var(--cyan);
+      background: rgba(87, 224, 255, 0.07);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      color: #eaf8ff;
+      font-size: 14px;
+      border: 1px solid rgba(87, 224, 255, 0.35);
+      border-radius: 8px;
+      background: rgba(8, 24, 55, 0.65);
+      box-shadow: inset 0 0 18px rgba(87, 224, 255, 0.08);
+    }
+
+    .tag-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 14px var(--cyan);
+    }
+
+    .hero-visual {
+      min-height: 520px;
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+
+    .orbit {
+      position: absolute;
+      inset: 7% 4%;
+      border-radius: 50%;
+      border: 1px solid rgba(87, 224, 255, 0.14);
+      transform: rotate(-16deg);
+    }
+
+    .orbit:nth-child(2) {
+      inset: 14% 13%;
+      border-color: rgba(140, 98, 255, 0.16);
+      transform: rotate(25deg);
+    }
+
+    .rail-chip {
+      width: min(100%, 520px);
+      aspect-ratio: 1 / 1;
+      border: 1px solid rgba(126, 190, 255, 0.28);
+      border-radius: 8px;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+        rgba(11, 22, 50, 0.62);
+      box-shadow: var(--shadow), inset 0 0 50px rgba(87, 224, 255, 0.06);
+      backdrop-filter: blur(12px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .rail-chip::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border: 1px solid rgba(87, 224, 255, 0.2);
+      border-radius: 8px;
+    }
+
+    .rail-chip::after {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      right: -86px;
+      top: -70px;
+      background: radial-gradient(circle, rgba(255, 95, 210, 0.18), transparent 68%);
+    }
+
+    .rail-chip svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .track-line {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 5;
+      filter: drop-shadow(0 0 7px rgba(87, 224, 255, 0.7));
+      stroke-dasharray: 14 12;
+      animation: dashFlow 3.5s linear infinite;
+    }
+
+    .track-blue {
+      stroke: var(--blue);
+    }
+
+    .track-cyan {
+      stroke: var(--cyan);
+      animation-duration: 4.2s;
+    }
+
+    .track-violet {
+      stroke: var(--violet);
+      animation-duration: 4.8s;
+    }
+
+    .chip-core {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 164px;
+      height: 164px;
+      transform: translate(-50%, -50%);
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(87, 224, 255, 0.18), rgba(140, 98, 255, 0.18)),
+        rgba(7, 14, 33, 0.92);
+      border: 1px solid rgba(87, 224, 255, 0.55);
+      box-shadow: 0 0 40px rgba(87, 224, 255, 0.18), inset 0 0 30px rgba(140, 98, 255, 0.12);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      z-index: 2;
+    }
+
+    .chip-core strong {
+      display: block;
+      font-size: 46px;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .chip-core span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .pin {
+      position: absolute;
+      width: 32px;
+      height: 5px;
+      border-radius: 8px;
+      background: rgba(87, 224, 255, 0.36);
+      box-shadow: 0 0 12px rgba(87, 224, 255, 0.5);
+      z-index: 3;
+    }
+
+    .pin.p1 { left: 34%; top: 29%; transform: rotate(90deg); }
+    .pin.p2 { right: 28%; top: 36%; }
+    .pin.p3 { left: 22%; bottom: 31%; }
+    .pin.p4 { right: 36%; bottom: 22%; transform: rotate(90deg); }
+
+    .station {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #08132d;
+      border: 3px solid var(--cyan);
+      box-shadow: 0 0 16px rgba(87, 224, 255, 0.78);
+      z-index: 4;
+    }
+
+    .s1 { left: 18%; top: 24%; }
+    .s2 { right: 20%; top: 27%; border-color: var(--violet); }
+    .s3 { left: 28%; bottom: 17%; border-color: var(--green); }
+    .s4 { right: 18%; bottom: 28%; border-color: var(--amber); }
+    .s5 { left: 48%; top: 16%; border-color: var(--pink); }
+
+    .metric-strip {
+      position: absolute;
+      left: 26px;
+      right: 26px;
+      bottom: 26px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      z-index: 5;
+    }
+
+    .mini-metric {
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      background: rgba(3, 10, 28, 0.62);
+    }
+
+    .mini-metric b {
+      display: block;
+      color: var(--text);
+      font-size: 20px;
+    }
+
+    .mini-metric span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .section-head {
+      margin-bottom: 30px;
+      max-width: 920px;
+    }
+
+    .section-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 12px;
+      color: var(--cyan);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .section-kicker::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 14px var(--cyan);
+    }
+
+    h2 {
+      font-size: clamp(32px, 4vw, 54px);
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      margin-top: 12px;
+      max-width: 860px;
+      color: var(--muted);
+      font-size: clamp(15px, 1.35vw, 18px);
+      line-height: 1.8;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      position: relative;
+      min-height: 190px;
+      padding: 22px;
+      border: 1px solid rgba(126, 190, 255, 0.22);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(155deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025)),
+        var(--panel);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+      overflow: hidden;
+      transform: translateY(18px);
+      opacity: 0;
+      transition: transform 0.7s ease, opacity 0.7s ease, border-color 0.25s ease;
+    }
+
+    .card.in-view {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(87, 224, 255, 0.1), transparent);
+      transform: translateX(-120%);
+      transition: transform 0.7s ease;
+    }
+
+    .card:hover {
+      border-color: rgba(87, 224, 255, 0.46);
+    }
+
+    .card:hover::before {
+      transform: translateX(120%);
+    }
+
+    .card-number {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 22px;
+      color: var(--text);
+      border-radius: 8px;
+      border: 1px solid rgba(87, 224, 255, 0.42);
+      background: rgba(87, 224, 255, 0.1);
+      box-shadow: inset 0 0 16px rgba(87, 224, 255, 0.09);
+      font-weight: 800;
+    }
+
+    .card h3 {
+      position: relative;
+      z-index: 1;
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+
+    .card p,
+    .card li {
+      position: relative;
+      z-index: 1;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.72;
+    }
+
+    .card ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .rail-backdrop {
+      position: absolute;
+      inset: auto 5% 4% auto;
+      width: 420px;
+      height: 260px;
+      pointer-events: none;
+      opacity: 0.17;
+    }
+
+    .comparison {
+      display: grid;
+      gap: 14px;
+    }
+
+    .compare-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 70px minmax(0, 1fr);
+      align-items: stretch;
+      gap: 14px;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+
+    .compare-row.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .compare-cell {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      padding: 17px 18px;
+      border-radius: 8px;
+      border: 1px solid rgba(126, 190, 255, 0.22);
+      background: rgba(11, 24, 55, 0.64);
+      color: #dce9ff;
+      font-size: 17px;
+      line-height: 1.45;
+    }
+
+    .compare-cell.ai {
+      border-color: rgba(87, 224, 255, 0.36);
+      background: linear-gradient(135deg, rgba(87, 224, 255, 0.11), rgba(140, 98, 255, 0.11));
+      color: var(--text);
+    }
+
+    .arrow-cell {
+      display: grid;
+      place-items: center;
+      color: var(--cyan);
+      font-weight: 900;
+      font-size: 28px;
+    }
+
+    .module-card {
+      min-height: 210px;
+    }
+
+    .module-card .card-number {
+      margin-bottom: 16px;
+    }
+
+    .matrix {
+      overflow: hidden;
+      border: 1px solid rgba(126, 190, 255, 0.22);
+      border-radius: 8px;
+      background: rgba(5, 13, 31, 0.58);
+      box-shadow: var(--shadow);
+    }
+
+    .matrix-row {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      border-bottom: 1px solid rgba(126, 190, 255, 0.16);
+      min-height: 68px;
+      opacity: 0;
+      transform: translateX(-16px);
+      transition: transform 0.62s ease, opacity 0.62s ease;
+    }
+
+    .matrix-row.in-view {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .matrix-row:last-child {
+      border-bottom: 0;
+    }
+
+    .matrix-key {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 18px;
+      color: #eef7ff;
+      font-weight: 800;
+      background: rgba(87, 224, 255, 0.07);
+      border-right: 1px solid rgba(126, 190, 255, 0.16);
+    }
+
+    .matrix-key::before {
+      content: "";
+      width: 7px;
+      height: 26px;
+      border-radius: 8px;
+      background: linear-gradient(180deg, var(--cyan), var(--violet));
+      box-shadow: 0 0 16px rgba(87, 224, 255, 0.44);
+    }
+
+    .matrix-value {
+      display: flex;
+      align-items: center;
+      padding: 18px 20px;
+      color: var(--muted);
+      line-height: 1.62;
+    }
+
+    .timeline {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-top: 14px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      top: 50px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--violet), var(--green));
+      box-shadow: 0 0 18px rgba(87, 224, 255, 0.35);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding: 86px 20px 22px;
+      min-height: 246px;
+      border: 1px solid rgba(126, 190, 255, 0.22);
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025)),
+        rgba(11, 24, 55, 0.64);
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .timeline-item.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .timeline-dot {
+      position: absolute;
+      top: 35px;
+      left: 24px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--cyan);
+      background: #071024;
+      box-shadow: 0 0 22px rgba(87, 224, 255, 0.55);
+    }
+
+    .timeline-dot::after {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+    }
+
+    .timeline-item b {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 22px;
+      color: var(--text);
+    }
+
+    .timeline-item p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.78;
+    }
+
+    .demo-shell {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .demo-panel {
+      border: 1px solid rgba(126, 190, 255, 0.24);
+      border-radius: 8px;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025)),
+        rgba(7, 16, 38, 0.78);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .demo-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 15px 18px;
+      border-bottom: 1px solid rgba(126, 190, 255, 0.16);
+      background: rgba(87, 224, 255, 0.06);
+    }
+
+    .window-dots {
+      display: inline-flex;
+      gap: 7px;
+    }
+
+    .window-dots span {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--subtle);
+    }
+
+    .window-dots span:nth-child(1) { background: var(--danger); }
+    .window-dots span:nth-child(2) { background: var(--amber); }
+    .window-dots span:nth-child(3) { background: var(--green); }
+
+    .demo-title {
+      color: var(--muted);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .demo-body {
+      padding: 20px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 238px;
+      resize: vertical;
+      color: var(--text);
+      background: rgba(2, 8, 23, 0.66);
+      border: 1px solid rgba(126, 190, 255, 0.25);
+      border-radius: 8px;
+      padding: 18px;
+      outline: none;
+      font: inherit;
+      font-size: 17px;
+      line-height: 1.78;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    textarea:focus {
+      border-color: rgba(87, 224, 255, 0.68);
+      box-shadow: 0 0 0 4px rgba(87, 224, 255, 0.08);
+    }
+
+    .btn-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .primary-btn {
+      position: relative;
+      min-height: 46px;
+      padding: 0 20px;
+      border: 1px solid rgba(87, 224, 255, 0.55);
+      border-radius: 8px;
+      color: #061223;
+      background: linear-gradient(90deg, var(--cyan), #9bd7ff);
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(87, 224, 255, 0.22);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 38px rgba(87, 224, 255, 0.32);
+    }
+
+    .primary-btn:active {
+      transform: translateY(0);
+    }
+
+    .demo-tip {
+      color: var(--subtle);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .result-screen {
+      min-height: 356px;
+      padding: 20px;
+      background:
+        linear-gradient(180deg, rgba(87, 224, 255, 0.08), transparent 42%),
+        rgba(2, 8, 23, 0.54);
+    }
+
+    .result-placeholder {
+      height: 100%;
+      min-height: 316px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--subtle);
+      border: 1px dashed rgba(126, 190, 255, 0.22);
+      border-radius: 8px;
+      padding: 22px;
+    }
+
+    .result-list {
+      display: none;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .result-list.show {
+      display: grid;
+      gap: 14px;
+    }
+
+    .result-item {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px;
+      border: 1px solid rgba(126, 190, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(10, 22, 49, 0.72);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .result-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .result-icon {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      border: 1px solid rgba(87, 224, 255, 0.38);
+      color: var(--cyan);
+      background: rgba(87, 224, 255, 0.08);
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .result-text b {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--text);
+      font-size: 16px;
+    }
+
+    .result-text span {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    .loading-line {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      color: var(--cyan);
+      font-size: 14px;
+    }
+
+    .loading-line.show {
+      display: flex;
+    }
+
+    .scanner {
+      width: 38px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      animation: scanPulse 0.9s ease-in-out infinite;
+    }
+
+    .value-card {
+      min-height: 210px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 22px;
+      border: 1px solid rgba(126, 190, 255, 0.24);
+      border-radius: 8px;
+      background:
+        radial-gradient(circle at 12% 12%, rgba(87, 224, 255, 0.16), transparent 38%),
+        rgba(11, 24, 55, 0.68);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .value-card.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .value-card small {
+      color: var(--cyan);
+      font-weight: 800;
+    }
+
+    .big-number {
+      margin-top: 14px;
+      font-size: clamp(42px, 5vw, 68px);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 0;
+      background: linear-gradient(90deg, #ffffff, var(--cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .value-card p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    .slogan {
+      margin-top: 30px;
+      padding: 24px;
+      border: 1px solid rgba(87, 224, 255, 0.28);
+      border-radius: 8px;
+      background:
+        linear-gradient(90deg, rgba(87, 224, 255, 0.12), rgba(140, 98, 255, 0.12)),
+        rgba(8, 18, 42, 0.68);
+      color: #f4fbff;
+      font-size: clamp(22px, 2.5vw, 34px);
+      line-height: 1.42;
+      font-weight: 800;
+      text-align: center;
+      box-shadow: inset 0 0 30px rgba(87, 224, 255, 0.06);
+    }
+
+    .data-bars {
+      display: grid;
+      gap: 9px;
+      margin-top: 18px;
+    }
+
+    .bar {
+      height: 8px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .bar span {
+      display: block;
+      height: 100%;
+      width: var(--w);
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--cyan), var(--violet));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 1s ease 0.2s;
+    }
+
+    .card.in-view .bar span {
+      transform: scaleX(1);
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: var(--subtle);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    @keyframes dashFlow {
+      to { stroke-dashoffset: -104; }
+    }
+
+    @keyframes scanPulse {
+      0%, 100% { transform: scaleX(0.4); opacity: 0.5; }
+      50% { transform: scaleX(1); opacity: 1; }
+    }
+
+    @media (max-width: 1120px) {
+      :root {
+        --nav-h: 64px;
+      }
+
+      .top-nav {
+        padding: 0 18px;
+      }
+
+      .brand {
+        min-width: auto;
+      }
+
+      .brand span:last-child {
+        display: none;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual {
+        min-height: 420px;
+      }
+
+      .grid-3,
+      .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .timeline {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .timeline::before {
+        display: none;
+      }
+
+      .demo-shell {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .section {
+        padding: calc(var(--nav-h) + 30px) 18px 42px;
+      }
+
+      .nav-inner {
+        gap: 10px;
+      }
+
+      .nav-link {
+        font-size: 12px;
+        padding: 8px 9px;
+      }
+
+      h1 {
+        font-size: clamp(38px, 13vw, 58px);
+      }
+
+      .subtitle {
+        font-size: 18px;
+      }
+
+      .grid-2,
+      .grid-3,
+      .grid-4,
+      .timeline {
+        grid-template-columns: 1fr;
+      }
+
+      .compare-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .arrow-cell {
+        min-height: 28px;
+        transform: rotate(90deg);
+      }
+
+      .matrix-row {
+        grid-template-columns: 1fr;
+      }
+
+      .matrix-key {
+        border-right: 0;
+        border-bottom: 1px solid rgba(126, 190, 255, 0.16);
+      }
+
+      .metric-strip {
+        grid-template-columns: 1fr;
+        position: static;
+        margin: 22px;
+      }
+
+      .rail-chip {
+        aspect-ratio: 1 / 1.08;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav" aria-label="椤甸潰瀵艰埅">
+    <div class="nav-inner">
+      <a class="brand" href="#cover" aria-label="杩斿洖灏侀潰">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>鏅鸿建鎱ц</span>
+      </a>
+      <div class="nav-links">
+        <a class="nav-link active" href="#cover">灏侀潰</a>
+        <a class="nav-link" href="#base">鍩虹</a>
+        <a class="nav-link" href="#why-ai">AI鍗囩骇</a>
+        <a class="nav-link" href="#direction">鏂瑰悜</a>
+        <a class="nav-link" href="#opc">OPC璺緞</a>
+        <a class="nav-link" href="#roadmap">30澶㎝VP</a>
+        <a class="nav-link" href="#demo">Demo</a>
+        <a class="nav-link" href="#value">浠峰€?/a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="section" id="cover" data-index="01">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">涓叧鏉慉I鍖楃含绀惧尯OPC鍔犻€熻惀璺紨灞曠ず</div>
+          <h1><span class="gradient-text">鏅鸿建鎱ц</span> AI鍖栧崌绾ц矾绾垮睍绀?/h1>
+          <p class="subtitle">浠庤建閬撲氦閫氭暟瀛楀寲鎺掔彮宸ュ叿锛屽埌AI杈呭姪鍐崇瓥鍨嬫櫤鑳借皟搴﹁В鍐虫柟妗?/p>
+          <p class="position-note">褰撳墠椤圭洰浠ュ煄甯傝建閬撲氦閫氫箻鍔℃帓鐝暟瀛楀寲绯荤粺涓庝笟鍔℃柟妗堜负鍩虹锛孉I鍖栬兘鍔涗綔涓轰笅涓€闃舵鍗囩骇璺嚎灞曠ず锛屾嫙渚濇墭OPC妯″紡瀹屾垚杞婚噺楠岃瘉銆佹晱鎹疯凯浠ｄ笌鐢熸€侀摼鎺ャ€?/p>
+          <div class="tags" aria-label="椤圭洰鏍囩">
+            <span class="tag"><span class="tag-dot"></span>鍩庡競杞ㄩ亾浜ら€?/span>
+            <span class="tag"><span class="tag-dot"></span>涔樺姟鎺掔彮</span>
+            <span class="tag"><span class="tag-dot"></span>OPC鍔犻€熻惀</span>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-label="鎶借薄鍦伴搧绾跨綉涓嶢I鑺墖铻嶅悎鍥惧舰">
+          <div class="orbit"></div>
+          <div class="orbit"></div>
+          <div class="rail-chip">
+            <svg viewBox="0 0 520 520" role="img" aria-label="杞ㄩ亾浜ら€氱嚎缃?>
+              <path class="track-line track-blue" d="M55 130 C150 70, 230 112, 308 170 S430 210, 464 112"></path>
+              <path class="track-line track-cyan" d="M72 390 C126 282, 214 284, 270 345 S390 452, 466 332"></path>
+              <path class="track-line track-violet" d="M88 248 C182 246, 214 154, 288 116 S388 74, 438 172"></path>
+              <path class="track-line track-cyan" d="M128 86 C148 178, 125 242, 206 304 S356 306, 398 430"></path>
+              <path class="track-line track-blue" d="M58 314 C166 356, 244 250, 326 254 S414 266, 476 244"></path>
+            </svg>
+            <div class="chip-core">
+              <div>
+                <strong>AI</strong>
+                <span>Scheduling Upgrade</span>
+              </div>
+            </div>
+            <span class="pin p1"></span>
+            <span class="pin p2"></span>
+            <span class="pin p3"></span>
+            <span class="pin p4"></span>
+            <span class="station s1"></span>
+            <span class="station s2"></span>
+            <span class="station s3"></span>
+            <span class="station s4"></span>
+            <span class="station s5"></span>
+            <div class="metric-strip">
+              <div class="mini-metric"><b>瑙勫垯</b><span>宸ユ椂涓庝紤鎭害鏉?/span></div>
+              <div class="mini-metric"><b>鏁版嵁</b><span>鏃跺埢琛ㄤ笌鐝鐗囨</span></div>
+              <div class="mini-metric"><b>寤鸿</b><span>浜哄湪鍥炶矾杈呭姪鍐崇瓥</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="base" data-index="02">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-kicker">椤圭洰鐜版湁鍩虹</div>
+          <h2>鍏堟妸杞ㄩ亾浜ら€氫箻鍔℃帓鐝殑鐪熷疄涓氬姟璺戦€?/h2>
+          <p class="lead">鏅鸿建鎱ц褰撳墠瀹氫綅涓洪潰鍚戜箻鍔℃帓鐝殑鏁板瓧鍖栫郴缁熶笌涓氬姟鏂规锛岄噸鐐规矇娣€瑙勫垯銆佹祦绋嬨€佹暟鎹粨鏋勫拰璋冨害浜哄憳宸ヤ綔娴侊紝涓哄悗缁瑼I鍖栧崌绾ф彁渚涘彲钀藉湴鐨勫満鏅簳搴с€?/p>
+        </div>
+
+        <div class="grid-3">
+          <article class="card">
+            <div class="card-number">01</div>
+            <h3>搴旂敤鍦烘櫙</h3>
+            <ul>
+              <li>鍦伴搧涔樺姟鎺掔彮</li>
+              <li>杞箻鍥剧紪鍒?/li>
+              <li>杩愯惀璋冩暣閲嶆帓</li>
+            </ul>
+            <div class="data-bars" aria-hidden="true">
+              <div class="bar"><span style="--w: 78%"></span></div>
+              <div class="bar"><span style="--w: 56%"></span></div>
+              <div class="bar"><span style="--w: 68%"></span></div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-number">02</div>
+            <h3>鏍稿績闂</h3>
+            <ul>
+              <li>浜哄伐鎺掔彮鏁堢巼浣?/li>
+              <li>瑙勫垯澶嶆潅銆佸悎瑙勬牎楠岄毦</li>
+              <li>宸ヤ綔寮哄害涓嶅潎琛?/li>
+            </ul>
+            <div class="data-bars" aria-hidden="true">
+              <div class="bar"><span style="--w: 84%"></span></div>
+              <div class="bar"><span style="--w: 70%"></span></div>
+              <div class="bar"><span style="--w: 62%"></span></div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-number">03</div>
+            <h3>褰撳墠鑳藉姏</h3>
+            <ul>
+              <li>鎺掔彮杈呭姪</li>
+              <li>鍐茬獊妫€鏌?/li>
+              <li>宸ヤ綔閲忓潎琛′笌鏂规浼樺寲</li>
+            </ul>
+            <div class="data-bars" aria-hidden="true">
+              <div class="bar"><span style="--w: 74%"></span></div>
+              <div class="bar"><span style="--w: 65%"></span></div>
+              <div class="bar"><span style="--w: 72%"></span></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="why-ai" data-index="03">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-kicker">涓轰粈涔堥渶瑕丄I鍗囩骇</div>
+          <h2>浠庝汉宸ョ粡楠屽伐鍏凤紝璧板悜鍙В閲婄殑杈呭姪鍐崇瓥鑳藉姏</h2>
+          <p class="lead">AI鍖栧崌绾т笉鏄浛浠ｈ皟搴︿汉鍛橈紝鑰屾槸鎶婂鏉傝鍒欍€佷复鏃跺彉鍖栧拰鍘嗗彶杩愯惀鏁版嵁杞寲涓哄彲璁＄畻銆佸彲瑙ｉ噴銆佸彲澶嶆牳鐨勮緟鍔╁缓璁€?/p>
+        </div>
+
+        <div class="comparison">
+          <div class="compare-row">
+            <div class="compare-cell">浜哄伐缁忛獙鎺掔彮</div>
+            <div class="arrow-cell">鈫?/div>
+            <div class="compare-cell ai">鏅鸿兘浼樺寲绠楁硶</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-cell">涓存椂璋冩暣鍥伴毦</div>
+            <div class="arrow-cell">鈫?/div>
+            <div class="compare-cell ai">鍔ㄦ€侀噸鎺掓ā鍨?/div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-cell">鎺掔彮缁撴灉闅捐В閲?/div>
+            <div class="arrow-cell">鈫?/div>
+            <div class="compare-cell ai">澶фā鍨嬭В閲婂姪鎵?/div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-cell">鐤插姵椋庨櫓闅炬彁鍓嶈瘑鍒?/div>
+            <div class="arrow-cell">鈫?/div>
+            <div class="compare-cell ai">椋庨櫓棰勬祴棰勮</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-cell">鏁版嵁浠峰€兼湭鍏呭垎鍒╃敤</div>
+            <div class="arrow-cell">鈫?/div>
+            <div class="compare-cell ai">杩愯惀鏁版嵁鍒嗘瀽鐪嬫澘</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="direction" data-index="04">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-kicker">AI鍖栧崌绾ф柟鍚?/div>
+          <h2>鍥寸粫鈥滆鍒欍€佸彉鍖栥€佽В閲娿€侀闄┾€濆舰鎴愬叚绫昏兘鍔?/h2>
+          <p class="lead">鍦ㄤ腑鍏虫潙AI鍖楃含绀惧尯OPC鍔犻€熻惀瀛靛寲璇涓嬶紝椤圭洰鎷熶互灏忔牱鏈暟鎹拰鍙紨绀篗VP涓鸿捣鐐癸紝閫愭楠岃瘉AI杈呭姪鎺掔彮鐨勫叧閿ā鍧椼€?/p>
+        </div>
+
+        <div class="grid-3">
+          <article class="card module-card">
+            <div class="card-number">01</div>
+            <h3>鏅鸿兘鎺掔彮浼樺寲寮曟搸</h3>
+            <p>鎷熷皢涔樺姟瑙勫垯銆佸伐鏃剁害鏉熴€佷紤鎭害鏉熻浆鍖栦负鍙紭鍖栨ā鍨嬶紝杈呭姪鐢熸垚鍙鏍哥殑鎺掔彮寤鸿銆?/p>
+          </article>
+          <article class="card module-card">
+            <div class="card-number">02</div>
+            <h3>鍔ㄦ€侀噸鎺掍笌搴旀€ヨ皟搴?/h3>
+            <p>闈㈠缂哄嫟銆佸欢璇€佽繍钀ヨ皟鏁寸瓑鍙樺寲锛屾嫙鑷姩鐢熸垚鏇夸唬鏂规锛屽苟淇濈暀浜哄伐纭鐜妭銆?/p>
+          </article>
+          <article class="card module-card">
+            <div class="card-number">03</div>
+            <h3>瀹㈡祦棰勬祴杈呭姪鎺掔彮</h3>
+            <p>璁″垝缁撳悎鍘嗗彶瀹㈡祦銆佽妭鍋囨棩銆佸ぉ姘斻€侀珮宄版椂娈电瓑鍙橀噺锛岄娴嬩笉鍚岀彮娆＄殑浜哄姏闇€姹傘€?/p>
+          </article>
+          <article class="card module-card">
+            <div class="card-number">04</div>
+            <h3>鐤插姵椋庨櫓鏅鸿兘棰勮</h3>
+            <p>鎷熸牴鎹繛缁伐浣滄椂闀裤€佸鐝娆°€佷紤鎭棿闅旂瓑鎸囨爣锛岃瘑鍒綔鍦ㄧ柌鍔抽闄┿€?/p>
+          </article>
+          <article class="card module-card">
+            <div class="card-number">05</div>
+            <h3>鎺掔彮Agent鍔╂墜</h3>
+            <p>鏀寔鑷劧璇█杈撳叆锛屼緥濡傗€滃府鎴戞鏌ユ槑澶╂棭鐝槸鍚﹀瓨鍦ㄨ秴鏃朵汉鍛樷€濓紝闄嶄綆绯荤粺浣跨敤闂ㄦ銆?/p>
+          </article>
+          <article class="card module-card">
+            <div class="card-number">06</div>
+            <h3>鏂规瑙ｉ噴涓庣鐞嗘姤鍛?/h3>
+            <p>鎷熻嚜鍔ㄨВ閲婂啿绐佸師鍥犮€佷紭鍖栦緷鎹拰绠＄悊寤鸿锛岃璋冨害鏂规鏇村鏄撴矡閫氬拰澶嶇洏銆?/p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="opc" data-index="05">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-kicker">OPC璧嬭兘璺緞</div>
+          <h2>OPC璧勬簮 脳 椤圭洰鍗囩骇锛氳交閲忓惎鍔ㄣ€佹晱鎹疯瘯閿欍€佺敓鎬佽祴鑳?/h2>
+          <p class="lead">椤圭洰甯屾湜鍊熷姪OPC鏈嶅姟璁″垝鐨勭┖闂淬€佹湇鍔°€佸伐鍏蜂笌鐢熸€佽祫婧愶紝鎶婇珮鏍″洟闃熷拰灏忓洟闃熺殑椤圭洰鑳藉姏鏀惧ぇ锛屽舰鎴愨€滀氦閫氬満鏅?+ AI鑳藉姏 + 浜т笟璧勬簮鈥濈殑闂幆銆?/p>
+        </div>
+
+        <div class="matrix" role="table" aria-label="OPC璧勬簮涓庨」鐩崌绾х煩闃?>
+          <div class="matrix-row" role="row">
+            <div class="matrix-key" role="cell">绌洪棿鏀寔</div>
+            <div class="matrix-value" role="cell">甯屾湜渚濇墭瀛靛寲绌洪棿涓庡睍绀轰氦娴佸満鏅紝瀹屾垚璺紨婕旂ず銆佺敤鎴疯璋堝拰MVP闃舵鎬ц瘎瀹°€?/div>
+          </div>
+          <div class="matrix-row" role="row">
+            <div class="matrix-key" role="cell">鏈嶅姟鏀寔</div>
+            <div class="matrix-value" role="cell">璁″垝鑾峰緱鏀跨瓥銆佸垱涓氥€佸悎瑙勩€佽矾婕旇緟瀵硷紝甯姪椤圭洰浠庝笟鍔℃柟妗堣浆鍚戝彲楠岃瘉浜у搧鏂规銆?/div>
+          </div>
+          <div class="matrix-row" role="row">
+            <div class="matrix-key" role="cell">宸ュ叿鏀寔</div>
+            <div class="matrix-value" role="cell">鎷熶娇鐢ㄥ脊鎬х畻鍔涖€丄gent瓒呭競銆丄I宸ュ叿閾俱€佹妧鏈厤濂楁湇鍔★紝瀹屾垚鏅鸿兘鎺掔彮MVP楠岃瘉銆?/div>
+          </div>
+          <div class="matrix-row" role="row">
+            <div class="matrix-key" role="cell">鐢熸€佹敮鎸?/div>
+            <div class="matrix-value" role="cell">鏈熷緟閾炬帴楂樻牎銆佷骇涓氭柟銆佹姇璧勬満鏋勫拰杞ㄩ亾浜ら€氬簲鐢ㄥ満鏅紝鎺ㄥ姩鍦烘櫙楠岃瘉涓庤祫婧愬崗鍚屻€?/div>
+          </div>
+          <div class="matrix-row" role="row">
+            <div class="matrix-key" role="cell">鎶€鏈淮搴?/div>
+            <div class="matrix-value" role="cell">鍥寸粫绠楁硶寤烘ā銆佸ぇ妯″瀷搴旂敤銆佹暟鎹不鐞嗭紝瀹屾垚浠庢暟瀛楀寲瑙勫垯搴撳埌AI杈呭姪寤鸿鐨勫崌绾ц矾寰勩€?/div>
+          </div>
+          <div class="matrix-row" role="row">
+            <div class="matrix-key" role="cell">浜т笟缁村害</div>
+            <div class="matrix-value" role="cell">浠ュ湴閾佽繍钀ュ満鏅獙璇佷负璧风偣锛屾帰绱㈠叕浜ゃ€侀搧璺€佸尰鐤椼€佸埗閫犵瓑璺ㄨ涓氭帓鐝嫇灞曘€?/div>
+          </div>
+          <div class="matrix-row" role="row">
+            <div class="matrix-key" role="cell">璧勬湰缁村害</div>
+            <div class="matrix-value" role="cell">璁″垝鍊熷姪铻嶈祫鍔犻€熶笌璺紨杈呭锛屾⒊鐞嗗晢涓氭ā寮忋€佷氦浠樿矾寰勫拰闃舵鎬ц瀺璧勫彊浜嬨€?/div>
+          </div>
+          <div class="matrix-row" role="row">
+            <div class="matrix-key" role="cell">鏀跨瓥缁村害</div>
+            <div class="matrix-value" role="cell">鎷熷鎺ョ鍒涙斂绛栥€佷紒涓氭敞鍐屻€佸鍖栬祫婧愪笌鏁版嵁鍚堣瑕佹眰锛岄檷浣庢棭鏈熻惤鍦版垚鏈€?/div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="roadmap" data-index="06">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-kicker">30澶〢I鍖朚VP璺嚎鍥?/div>
+          <h2>鐢ㄥ洓鍛ㄦ椂闂撮獙璇佲€滆兘婕旂ず銆佽兘瑙ｉ噴銆佽兘杩唬鈥濈殑鏈€灏忛棴鐜?/h2>
+          <p class="lead">涓夐樁鍔犻€熷紩鎿庡搴旇瀺璧勫姞閫熴€佹垚闀垮姞閫熴€佷骇涓氬姞閫熴€?0澶╅樁娈典互鎴愰暱鍔犻€熶负鏍稿績锛屼紭鍏堝畬鎴愬満鏅鍒欍€佺畻娉曞師鍨嬨€丄gent浜や簰鍜岃矾婕擠emo銆?/p>
+        </div>
+
+        <div class="timeline">
+          <article class="timeline-item">
+            <span class="timeline-dot" aria-hidden="true"></span>
+            <b>绗?鍛?/b>
+            <p>姊崇悊鎺掔彮瑙勫垯涓庢暟鎹粨鏋勶紝瀹屾垚AI鍗囩骇闇€姹傚畾涔夛紝鏄庣‘浜哄湪鍥炶矾涓庡畨鍏ㄨ竟鐣屻€?/p>
+          </article>
+          <article class="timeline-item">
+            <span class="timeline-dot" aria-hidden="true"></span>
+            <b>绗?鍛?/b>
+            <p>鏋勫缓鏅鸿兘浼樺寲绠楁硶鍘熷瀷涓庢帓鐝瑼gent浜や簰鍘熷瀷锛屽舰鎴愬彲婕旂ず鐨勫缓璁敓鎴愭祦绋嬨€?/p>
+          </article>
+          <article class="timeline-item">
+            <span class="timeline-dot" aria-hidden="true"></span>
+            <b>绗?鍛?/b>
+            <p>鎺ュ叆绀轰緥鏁版嵁锛屽畬鎴愬姩鎬侀噸鎺掋€佸啿绐佸垎鏋愩€佺柌鍔抽闄╅璀︽紨绀恒€?/p>
+          </article>
+          <article class="timeline-item">
+            <span class="timeline-dot" aria-hidden="true"></span>
+            <b>绗?鍛?/b>
+            <p>褰㈡垚璺紨Demo銆佸晢涓氭ā寮忚鏄庡拰鍦烘櫙楠岃瘉鏂规锛屽噯澶囦骇涓氫笌璧勬湰娌熼€氭潗鏂欍€?/p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="demo" data-index="07">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-kicker">浜や簰寮廌emo鍖哄煙</div>
+          <h2>闈欐€佹ā鎷熲€淎I鎺掔彮鍔╂墜鈥濈殑鏍稿績浜や簰</h2>
+          <p class="lead">璇ュ尯鍩熶负鍓嶇闈欐€佹紨绀猴紝涓嶈繛鎺ョ湡瀹炲悗绔紝涓嶈鍙栫湡瀹炶繍钀ユ暟鎹紝鐢ㄤ簬灞曠ず鏈潵MVP鐨勪汉鏈哄崗鍚屼綋楠屻€?/p>
+        </div>
+
+        <div class="demo-shell">
+          <div class="demo-panel">
+            <div class="demo-header">
+              <div class="window-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+              <div class="demo-title">杈撳叆璋冨害闂</div>
+            </div>
+            <div class="demo-body">
+              <textarea id="demoInput" aria-label="鎺掔彮鍔╂墜杈撳叆妗?>鏄庡ぉ鏃╅珮宄版湁2鍚嶄箻鍔″憳璇峰亣锛岃閲嶆柊鐢熸垚婊¤冻宸ユ椂绾︽潫鐨勬帓鐝柟妗堛€?/textarea>
+              <div class="btn-row">
+                <button class="primary-btn" id="generateBtn" type="button">鐢熸垚AI寤鸿</button>
+                <span class="demo-tip">妯℃嫙璇嗗埆寮傚父銆佺害鏉熸鏌ヤ笌寤鸿杈撳嚭</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="demo-panel">
+            <div class="demo-header">
+              <div class="window-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+              <div class="demo-title">AI杈呭姪寤鸿杈撳嚭</div>
+            </div>
+            <div class="result-screen">
+              <div class="loading-line" id="loadingLine"><span class="scanner"></span>姝ｅ湪妯℃嫙鍒嗘瀽鎺掔彮绾︽潫涓庣己鍕ゅ奖鍝?/div>
+              <div class="result-placeholder" id="resultPlaceholder">鐐瑰嚮宸︿晶鎸夐挳鍚庯紝杩欓噷灏嗘笎鏄炬ā鎷熷缓璁粨鏋溿€?/div>
+              <ul class="result-list" id="resultList" aria-live="polite"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="value" data-index="08">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-kicker">鏈潵浠峰€?/div>
+          <h2>浠ョ洰鏍囧鍚戝憟鐜癆I鍖栧崌绾х殑鍙獙璇佷环鍊?/h2>
+          <p class="lead">浠ヤ笅涓篗VP闃舵甯屾湜楠岃瘉鐨勭洰鏍囨柟鍚戯紝涓嶄綔涓哄凡瀹炵幇杩愯惀鏁版嵁銆傞」鐩皢浼樺厛楠岃瘉鏁堢巼銆佸悎瑙勩€侀闄╁拰澶嶅埗鎬у洓绫讳环鍊笺€?/p>
+        </div>
+
+        <div class="grid-4">
+          <article class="value-card">
+            <div>
+              <small>鎺掔彮鏁堢巼鎻愬崌</small>
+              <div class="big-number"><span class="count" data-target="30">0</span>%+</div>
+            </div>
+            <p>鐩爣锛氱缉鐭鍒欐鏌ヤ笌涓存椂璋冩暣鏃堕棿锛岃璋冨害浜哄憳鎶婄簿鍔涢泦涓湪澶嶆牳涓庡喅绛栦笂銆?/p>
+          </article>
+          <article class="value-card">
+            <div>
+              <small>浜哄伐閿欒鍑忓皯</small>
+              <div class="big-number"><span class="count" data-target="40">0</span>%+</div>
+            </div>
+            <p>鐩爣锛氶€氳繃绾︽潫鏍￠獙銆佸啿绐佹彁绀哄拰鏂规瑙ｉ噴锛岄檷浣庢紡妫€銆侀敊閰嶅拰鐗堟湰娣蜂贡椋庨櫓銆?/p>
+          </article>
+          <article class="value-card">
+            <div>
+              <small>鐤插姵椋庨櫓棰勮</small>
+              <div class="big-number"><span class="count" data-target="24">0</span>h</div>
+            </div>
+            <p>鐩爣锛氬湪绀轰緥鏁版嵁涓彁鍓嶈瘑鍒繛缁伐浣溿€佸鐝娆″拰浼戞伅涓嶈冻绛夐闄╀俊鍙枫€?/p>
+          </article>
+          <article class="value-card">
+            <div>
+              <small>璺ㄨ涓氬鍒?/small>
+              <div class="big-number"><span class="count" data-target="4">0</span>绫?</div>
+            </div>
+            <p>鐩爣锛氫粠杞ㄩ亾浜ら€氭墿灞曞埌鍏氦銆佸尰鐤椼€佸埗閫犮€佸叕鍏辨湇鍔＄瓑澶嶆潅鎺掔彮鍦烘櫙銆?/p>
+          </article>
+        </div>
+
+        <div class="slogan">鍊熷姪OPC鍔犻€熻惀锛岃鏅鸿建鎱ц浠庢暟瀛楀寲鎺掔彮宸ュ叿鍗囩骇涓篈I椹卞姩鐨勬櫤鑳借皟搴﹁В鍐虫柟妗堛€?/div>
+        <div class="footer-note">灞曠ず杈圭晫锛欰I鍖栬兘鍔涗负瑙勫垝涓嶮VP楠岃瘉鏂瑰悜锛屽疄闄呭簲鐢ㄩ渶缁忚繃鏁版嵁鍚堣銆佸満鏅獙璇佸拰浜哄伐澶嶆牳銆?/div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const navLinks = Array.from(document.querySelectorAll(".nav-link"));
+    const sections = Array.from(document.querySelectorAll(".section"));
+    const animatedItems = Array.from(document.querySelectorAll(".card, .compare-row, .matrix-row, .timeline-item, .value-card"));
+    const counters = Array.from(document.querySelectorAll(".count"));
+    const generateBtn = document.getElementById("generateBtn");
+    const resultList = document.getElementById("resultList");
+    const resultPlaceholder = document.getElementById("resultPlaceholder");
+    const loadingLine = document.getElementById("loadingLine");
+
+    function setActiveNav(id) {
+      navLinks.forEach((link) => {
+        link.classList.toggle("active", link.getAttribute("href") === "#" + id);
+      });
+    }
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveNav(entry.target.id);
+        }
+      });
+    }, {
+      root: null,
+      threshold: 0.48
+    });
+
+    sections.forEach((section) => sectionObserver.observe(section));
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in-view");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.18
+    });
+
+    animatedItems.forEach((item, index) => {
+      item.style.transitionDelay = Math.min(index % 6, 5) * 70 + "ms";
+      revealObserver.observe(item);
+    });
+
+    function animateCounter(counter) {
+      if (counter.dataset.done) return;
+      counter.dataset.done = "true";
+      const target = Number(counter.dataset.target || 0);
+      const duration = 1100;
+      const start = performance.now();
+
+      function tick(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        counter.textContent = Math.round(target * eased);
+        if (progress < 1) requestAnimationFrame(tick);
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target);
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.7
+    });
+
+    counters.forEach((counter) => counterObserver.observe(counter));
+
+    const demoResults = [
+      { icon: "01", title: "宸茶瘑鍒紓甯?, text: "2鍚嶄汉鍛樼己鍕わ紝褰卞搷鏄庢棩鏃╅珮宄板叧閿箻鍔＄墖娈点€? },
+      { icon: "02", title: "璋冩暣寤鸿", text: "鏇挎崲3涓箻鍔＄墖娈碉紝浼樺厛淇濇寔鍑洪€€鍕ゅ湴鐐逛竴鑷达紝骞朵繚鎸佷紤鎭棿闅斿悎瑙勩€? },
+      { icon: "03", title: "椋庨櫓鎻愮ず", text: "1鍚嶄汉鍛樻帴杩戣繛缁伐浣滀笂闄愶紝寤鸿瀹夋帓澶囩敤浜哄憳鎴栭檷浣庡悗缁彮娆″己搴︺€? },
+      { icon: "04", title: "浼樺寲缁撴灉", text: "棰勮鍑忓皯浜哄伐璋冩暣鏃堕棿锛屾彁鍗囨柟妗堝悎瑙勬€э紝鏈€缁堟柟妗堜粛鐢辫皟搴︿汉鍛樺鏍哥‘璁ゃ€? }
+    ];
+
+    function clearResults() {
+      resultList.innerHTML = "";
+      resultList.classList.remove("show");
+      resultPlaceholder.style.display = "grid";
+    }
+
+    function showResults() {
+      clearResults();
+      resultPlaceholder.style.display = "none";
+      resultList.classList.add("show");
+
+      demoResults.forEach((item, index) => {
+        const li = document.createElement("li");
+        li.className = "result-item";
+        li.innerHTML = `
+          <span class="result-icon">${item.icon}</span>
+          <span class="result-text"><b>${item.title}</b><span></span></span>
+        `;
+        resultList.appendChild(li);
+
+        const textNode = li.querySelector(".result-text span");
+        setTimeout(() => {
+          li.classList.add("visible");
+          typeText(textNode, item.text, 18);
+        }, index * 360);
+      });
+    }
+
+    function typeText(node, text, speed) {
+      node.textContent = "";
+      let i = 0;
+
+      function addChar() {
+        node.textContent += text.charAt(i);
+        i += 1;
+        if (i < text.length) {
+          setTimeout(addChar, speed);
+        }
+      }
+
+      addChar();
+    }
+
+    generateBtn.addEventListener("click", () => {
+      generateBtn.disabled = true;
+      generateBtn.textContent = "鐢熸垚涓?..";
+      loadingLine.classList.add("show");
+      clearResults();
+
+      setTimeout(() => {
+        loadingLine.classList.remove("show");
+        showResults();
+        generateBtn.disabled = false;
+        generateBtn.textContent = "閲嶆柊鐢熸垚AI寤鸿";
+      }, 760);
+    });
+  </script>
+</body>
+</html>
